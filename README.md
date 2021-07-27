@@ -10,7 +10,7 @@
 
 Have you ever seen some person playing a guitar with a looper pedal on the street? That's what this program is for, but with two fundamental differences:
 1. Although it can be used with any source of audio, this is intended for using a synthesizer.
-2. It has midi integrated, as well as audio, so it can be used as both an audio looper and a midi looper, all at once. Yoy can "bounce" your midi tracks as audio recording a new track as audio.
+2. It has midi integrated, as well as audio, so it can be used as both an audio looper and a midi looper, all at once. You can "bounce" your midi tracks as audio recording a new track as audio.
 
 So, we could say this software is a WIP CLI midi and audio looper. You can record and play midi and audio, all in sync, so with a hardware synthesizer and a line input in your audio interface you are able to record many tracks which will loop. It is possible, as well, to mute/deactivate tracks and activate them again without stopping. They will activate or deactivate when a new bar starts, not immediately.
 
