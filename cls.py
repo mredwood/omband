@@ -6,11 +6,14 @@ import mido
 import pygame
 
 
+# These are some functions that will be used later.
+
+# This one transforms ms_per_beat to bpm
 def ms_per_beat_to_bpm(ms_per_beat):
     bpm = 60000 / ms_per_beat
     return bpm
 
-
+# This one extracts tempo from the midi file. It returns the bpm
 def extract_tempo_from_track(midi_file):
     for track in midi_file.tracks:
         for msg in track:
@@ -19,14 +22,14 @@ def extract_tempo_from_track(midi_file):
                 return bpm
     return 0
 
-
+# This one extracts a list of all the messages in a midi_track
 def extract_msgs_from_midi_track(midi_track):
     msgs = []
     for msg in midi_track:
         msgs.append(msg)
     return msgs
 
-
+# This one extracts the absolute time from a midi_track (according to the tempo)
 def extract_absolute_msgs_from_midi_track(midi_track, ticks_per_beat, new_ticks_per_beat):
     msgs = []
     absolute_time = 0
@@ -37,7 +40,7 @@ def extract_absolute_msgs_from_midi_track(midi_track, ticks_per_beat, new_ticks_
         msgs.append(temp_msg)
     return msgs
 
-
+# This one returns the midi messages with the corrected time (relative time between messages)
 def absolute_msgs_to_midi_track(midi_track):
     msgs = []
     for i in range(len(midi_track.msgs)):
@@ -47,12 +50,13 @@ def absolute_msgs_to_midi_track(midi_track):
         msgs.append(new_msg)
     return msgs
 
-
+# This one transforms the bpm to ms_per_beat
 def bpm_to_ms_per_beat(bpm):
     ms_per_beat = 60000 / bpm
     return ms_per_beat
 
 
+# This class will be the one in charge to record a new midi track
 class MidiRecorder:
     def __init__(self, tracks):
         self.input_device = None
@@ -66,6 +70,7 @@ class MidiRecorder:
         self.is_recording = False
         self.is_changing_active_state = False
 
+    # This method appends the midi messages from the input device to self.temp_midi_track
     def record(self, clock):
         if self.is_active and self.is_recording:
             if clock.just_ticked:
@@ -80,6 +85,7 @@ class MidiRecorder:
         self.change_state_check(clock)
         self.record(clock)
 
+    # This method stops the recording. It gives a name to the new midi track, it puts a final_tick to it and it adds a final meta message, "end of track". After that, it resets some variables.
     def stop_recording(self):
         self.temp_midi_track.name = "NewMidiRec"
         self.temp_track = TrackMidi(midi_track=self.temp_midi_track)
@@ -107,17 +113,20 @@ class MidiRecorder:
             self.is_recording = True
             self.input_device = mido.open_input("minilogue:minilogue MIDI 2 24:1")
 
+    # This method checks, at the beginning of each beat number1 whether it's necessary to change the state to active/inactive
     def change_state_check(self, clock):
         if clock.relative_tick == 1 and clock.beat == 1 and self.is_changing_active_state:
             self.is_changing_active_state = False
             self.change_active_state()
 
 
+# This class is only a parent to other two classes: TrackMidi and TrackAudio
 class Track:
     def __init__(self):
         self.type = ""
 
 
+# This is a TrackMidi. Its main purpose is to send the messages it has to the output device
 class TrackMidi(Track):
     def __init__(self, midi_track=None, ticks_per_beat=192):
         self.ticks_per_beat = ticks_per_beat
@@ -174,6 +183,7 @@ class TrackMidi(Track):
             self.is_active = True
 
 
+# This class saves midi files and activates the update method of the midi tracks
 class MidiManager:
     def __init__(self):
         self.output_device = mido.open_output("minilogue:minilogue MIDI 2 24:1")
@@ -239,7 +249,7 @@ class MidiManager:
     def on_exit(self):
         self.output_device.panic()
 
-
+# This class records the audio
 class AudioRecorder:
     def __init__(self):
         self.tracks = []
@@ -262,6 +272,7 @@ class AudioRecorder:
 
         self.index = 1
 
+    # This method starts recording. It creates a stream of audio
     def start_recording(self):
         self.is_active = True
         self.is_recording = True
@@ -290,6 +301,7 @@ class AudioRecorder:
             if self.is_active and self.is_recording:
                 self.relative_tick += 1
 
+    # This one stops recording and creates a new trackAudio object
     def stop_recording(self):
         self.stream.stop_stream()
         self.wave_file.close()
@@ -316,6 +328,7 @@ class AudioRecorder:
             self.is_changing_active_state = False
 
 
+# This is the class TrackAudio. All audio tracks are of this kind
 class TrackAudio(Track):
     def __init__(self, index):
         self.index = index
@@ -363,6 +376,7 @@ class TrackAudio(Track):
             self.is_active = True
 
 
+# This class is the one that keeps ticking. It's the "master clock"
 class Clock:
     def __init__(self, ms_per_beat, ticks_per_beat):
         self.ticks_per_beat = ticks_per_beat
