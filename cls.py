@@ -182,7 +182,7 @@ class MidiManager:
         self.ms_per_beat = bpm_to_ms_per_beat(self.bpm)
         self.ticks_per_beat = 192
 
-        self.midi_file = mido.MidiFile("2.midi")
+        self.midi_file = mido.MidiFile("metronome.midi")
         self.tracks = self.load_tracks()
         self.original_tracks = []
 
