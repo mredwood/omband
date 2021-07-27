@@ -1,4 +1,5 @@
 import gui
+import time
 import pygame
 
 pygame.mixer.pre_init(44100, -16, 1, 512)
@@ -13,6 +14,8 @@ def main():
         application.event()
         application.update()
         application.draw()
+        # ATTENTION: a high sleeping time breaks this program, but it's necessary to have a sleep time if we don't want our CPU on fire.
+        time.sleep(0.001)
 
 
 if __name__ == "__main__":
