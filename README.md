@@ -51,5 +51,5 @@ If you press the same number as the index of the midi track, it will start/stop 
 ## Save midi file
 
 Your audio tracks will be overwritten by a new program, but you could save new versions of your midi tracks when pressing "g" at any moment. It will not have any feedback, but a directory will be created alongside the program with a new midi file whose name will be the current date and time. It will not overwrite previous versions.
-The midi file will be a type 1 midi file. That means "multitrack" midi file, so you could open it with other programs, like Sequencer64 and it will work.
+The midi file will be a type 1 midi file. That means "multitrack" midi file, so you could open it with other programs, like Sequencer64, and it will work.
 
