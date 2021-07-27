@@ -20,7 +20,7 @@ THIS HAS BEEN TESTED ON LINUX ONLY.
 
 - Right now, my synthesizer is hardcoded.
 - Curses in python crashes when shrinking too much the console window. I'm not sure how to fix it, and if it's possible at all.
-- It needs a midi file in order to load, but I don't want that.
+- It needs a midi file in order to load, but I don't want that. It will load any midi file named metronome.midi that is in the same directory as the program.
 - BPM is hardcoded.
 - Controls have to improve. Vim-like commands, maybe?
 - Documentation.
