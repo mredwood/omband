@@ -38,7 +38,7 @@ If you press "a" on your keyboard, it will arm a new track to record audio. If i
 
 ## Midi recording
 
-If you press "a" on your keyboard, it will arm a new track to record audio. If it's stopped, it will start recording as soon as you press "p" to play. If it's playing, it will start recording as soon as a new bar is started.
+If you press "r" on your keyboard, it will arm a new track to record midi. If it's stopped, it will start recording as soon as you press "p" to play. If it's playing, it will start recording as soon as a new bar is started.
 
 ## Delete last audio track
 
