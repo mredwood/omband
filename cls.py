@@ -105,7 +105,7 @@ class MidiRecorder:
             self.temp_midi_track = mido.MidiTrack()
             self.is_active = True
             self.is_recording = True
-            self.input_device = mido.open_input("minilogue:minilogue MIDI 2 20:1")
+            self.input_device = mido.open_input("minilogue:minilogue MIDI 2 24:1")
 
     def change_state_check(self, clock):
         if clock.relative_tick == 1 and clock.beat == 1 and self.is_changing_active_state:
@@ -132,7 +132,7 @@ class TrackMidi(Track):
         elif midi_track is not None and midi_track.name == "NewMidiRec":
             self.msgs = extract_msgs_from_midi_track(midi_track)
             self.name = midi_track.name
-
+        
         self.type = "MIDI"
         self.id_num = 0
         self.final_tick = self.calculate_final_tick()
@@ -147,6 +147,7 @@ class TrackMidi(Track):
             if msg.type == "end_of_track":
                 final_tick = msg.time
         return final_tick
+
 
     def update(self, clock, output_device):
         if clock.just_ticked:
@@ -175,13 +176,13 @@ class TrackMidi(Track):
 
 class MidiManager:
     def __init__(self):
-        self.output_device = mido.open_output("minilogue:minilogue MIDI 2 20:1")
+        self.output_device = mido.open_output("minilogue:minilogue MIDI 2 24:1")
 
         self.bpm = 97
         self.ms_per_beat = bpm_to_ms_per_beat(self.bpm)
         self.ticks_per_beat = 192
 
-        self.midi_file = mido.MidiFile("/home/marcos/midi/2.midi")
+        self.midi_file = mido.MidiFile("2.midi")
         self.tracks = self.load_tracks()
         self.original_tracks = []
 
@@ -204,7 +205,7 @@ class MidiManager:
                 for msg in msgs:
                     new_track.append(msg)
                 self.midi_file.tracks.append(new_track)
-        self.midi_file.save("/home/marcos/midi/2.midi")
+        self.midi_file.save("midi/" + str(time.ctime()).replace(" ", "_") + ".midi")
 
 
     def activate(self):
