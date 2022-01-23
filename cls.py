@@ -1,7 +1,10 @@
 import time
+import configparser
 import copy
-import pyaudio
 import wave
+import os
+
+import pyaudio
 import mido
 import pygame
 
@@ -37,6 +40,8 @@ def extract_absolute_msgs_from_midi_track(midi_track, ticks_per_beat, new_ticks_
         absolute_time = absolute_time + msg.time
         temp_msg = copy.copy(msg)
         temp_msg.time = absolute_time/(ticks_per_beat/new_ticks_per_beat)
+        if temp_msg.time == 0 and not temp_msg.is_meta:
+            temp_msg.time = 1 # This changes de 0 time of the first note_on message in order to avoid skipping the first note.
         msgs.append(temp_msg)
     return msgs
 
@@ -54,6 +59,57 @@ def absolute_msgs_to_midi_track(midi_track):
 def bpm_to_ms_per_beat(bpm):
     ms_per_beat = 60000 / bpm
     return ms_per_beat
+
+# This function returns a value from the config file
+def string_to_config_parser(content_to_parse):
+    config = configparser.ConfigParser()
+    config.read("omband.conf")
+    return config[content_to_parse[0]][content_to_parse[1]]
+
+
+
+# This class is the initial configuration screen
+class ConfInit:
+    def __init__(self):
+        self.config_file_path = "omband.conf"
+        self.bpm = 120
+        self.ticks_per_beat = 0
+
+        self.input_device_string = ""
+        self.output_device_string = ""
+
+        self.config = configparser.ConfigParser()
+        self.config.read(self.config_file_path)
+
+    def show_config_file(self):
+        print("There's an omband.conf file. We found the next configuration:\n")
+        print("Ports:")
+        print(" Input_device = " + self.config["Ports"]["input_device"])
+        print(" Output_device = " + self.config["Ports"]["output_device"])
+        print("Midi:")
+        print(" bpm = " + self.config["Midi"]["bpm"])
+        print(" Ticks per beat (192 by default) = " + self.config["Midi"]["ticks_per_beat"])
+        print(" File to load ('metronome.midi' by default) = " + self.config["Midi"]["file_to_load"])
+
+        command_is_valid = False
+        while not command_is_valid:
+            command = input("\nProceed with this configuration? (Y/n) ")
+            if command.lower() == "y" or command == "":
+                print("OK")
+                command_is_valid = True
+            elif command.lower() == "n":
+                print("OK, no")
+                command_is_valid = True
+                self.ask_for_parameters()
+
+
+
+    def ask_for_parameters(self):
+        print("asking")
+
+    def run(self):
+        os.system('clear')
+        self.show_config_file()
 
 
 # This class will be the one in charge to record a new midi track
@@ -111,7 +167,7 @@ class MidiRecorder:
             self.temp_midi_track = mido.MidiTrack()
             self.is_active = True
             self.is_recording = True
-            self.input_device = mido.open_input("minilogue:minilogue MIDI 2 24:1")
+            self.input_device = mido.open_input(string_to_config_parser(["Ports", "input_device"]))
 
     # This method checks, at the beginning of each beat number1 whether it's necessary to change the state to active/inactive
     def change_state_check(self, clock):
@@ -128,9 +184,9 @@ class Track:
 
 # This is a TrackMidi. Its main purpose is to send the messages it has to the output device
 class TrackMidi(Track):
-    def __init__(self, midi_track=None, ticks_per_beat=192):
+    def __init__(self, midi_track=None, ticks_per_beat=int(string_to_config_parser(["Midi", "ticks_per_beat"]))):
         self.ticks_per_beat = ticks_per_beat
-        self.new_ticks_per_beat = ticks_per_beat  # This would change the resolution. If changed, it's necessary to change it as well in the Clock class
+        self.new_ticks_per_beat = ticks_per_beat
 
         self.relative_tick = 0
         self.final_tick = 0
@@ -186,13 +242,13 @@ class TrackMidi(Track):
 # This class saves midi files and activates the update method of the midi tracks
 class MidiManager:
     def __init__(self):
-        self.output_device = mido.open_output("minilogue:minilogue MIDI 2 24:1")
+        self.output_device = mido.open_output(string_to_config_parser(["Ports", "output_device"]))
 
-        self.bpm = 97
+        self.bpm = int(string_to_config_parser(["Midi", "bpm"]))
         self.ms_per_beat = bpm_to_ms_per_beat(self.bpm)
-        self.ticks_per_beat = 192
+        self.ticks_per_beat = int(string_to_config_parser(["Midi", "ticks_per_beat"]))
 
-        self.midi_file = mido.MidiFile("metronome.midi")
+        self.midi_file = mido.MidiFile(string_to_config_parser(["Midi", "file_to_load"]))
         self.tracks = self.load_tracks()
         self.original_tracks = []
 
@@ -215,6 +271,8 @@ class MidiManager:
                 for msg in msgs:
                     new_track.append(msg)
                 self.midi_file.tracks.append(new_track)
+        if not os.path.exists('midi'):
+            os.makedirs('midi')
         self.midi_file.save("midi/" + str(time.ctime()).replace(" ", "_") + ".midi")
 
 
