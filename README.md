@@ -20,7 +20,7 @@ This could be considered a beta. It works, but some bugs are expected. Don't use
 
 - Record midi loops from an external synthesizer or midi controller.
 - Record midi loops with different lengths in a 4/4 rythm.
-- Easily bounce those midi loops to audio (pressing a button), as long as the input audio in your computer is set to the audio output of your synthesizer.
+- Easily bounce those midi loops to audio (pressing a button), as long as the audio input in your computer is set to the audio output of your synthesizer.
 - Change the config file (omband.conf) in order to adapt omband to your needs:
     - Choose bpm.
     - Choose PPQN (called "ticks per beat" in omband).
