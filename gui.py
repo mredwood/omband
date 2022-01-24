@@ -213,12 +213,15 @@ class Application:
         if input_ch == ord("p"):
             if not self.midi_manager.is_active:
                 self.midi_manager.activate()
+                for track in self.audio_recorder.tracks:
+                    track.reset()
+                    track.is_playing = True
+
             elif self.midi_manager.is_active:
                 self.midi_manager.stop()
                 for track in self.audio_recorder.tracks:
                     track.is_playing = False
                     track.stop_playing()
-                    track.reset()
 
         if input_ch == ord("d"):
             if len(self.audio_recorder.tracks) > 0:
