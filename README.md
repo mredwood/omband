@@ -79,7 +79,7 @@ The midi file will be a type 1 midi file. That means "multitrack" midi file, so 
 Press "q" and omband will stop and you will be in a messed up console. At least the program would have finished.
 If someone knows how to fix this bug, please, be kind to tell me how.
 
-## GPL 2 License
+# GPL 2 License
 
 omband, midi and audio looper
 Copyright (C) 2021, 2022  Marcos Redwood (marcos.rc91 at gmail.com)
