@@ -1,5 +1,5 @@
 ''' omband, midi and audio looper
-Copyright (C) 2021,2022  Marcos Redwood (marcos.rc91@gmail.com)
+Copyright (C) 2021,2022  Marcos Redwood (marcos.rc91 at gmail.com)
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
