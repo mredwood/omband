@@ -20,7 +20,7 @@ This could be considered a beta. It works, but some bugs are expected. Don't use
 
 - Record midi loops from an external synthesizer or midi controller.
 - Record midi loops with different lengths in a 4/4 rythm.
-- Easily bounce those midi loops to audio (pressing a button), as long as the audio input in your computer is set to the audio output of your synthesizer.
+- Easily bounce those midi loops to audio (pressing a button), as long as the input audio in your computer is set to the audio output of your synthesizer.
 - Change the config file (omband.conf) in order to adapt omband to your needs:
     - Choose bpm.
     - Choose PPQN (called "ticks per beat" in omband).
@@ -78,3 +78,15 @@ The midi file will be a type 1 midi file. That means "multitrack" midi file, so 
 
 Press "q" and omband will stop and you will be in a messed up console. At least the program would have finished.
 If someone knows how to fix this bug, please, be kind to tell me how.
+
+## GPL 2 License
+
+omband, midi and audio looper
+Copyright (C) 2021, 2022  Marcos Redwood (marcos.rc91 at gmail.com)
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
